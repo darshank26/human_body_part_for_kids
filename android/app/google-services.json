@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "691354989407",
+    "project_id": "human-body-parts-for-kids",
+    "storage_bucket": "human-body-parts-for-kids.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691354989407:android:bc59980c7f27d79330fcea",
+        "android_client_info": {
+          "package_name": "com.darshankomu.human_body_part_for_kids"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYUxPWfg9Rn5ExlouydWrQuceFcddhMPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
