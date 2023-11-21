@@ -4,6 +4,7 @@ const kprimarycolor = Color(0xff1890f6);
 const ksecondcolor = Color(0xff3ba2ff);
 const kthirdcolor = Color(0xff006ac0);
 const ksplashback = Color(0xff5271FF);
+const backcolor = Color(0xFFFCFFFC);
 
 
 var androidAppShareLink = "https://play.google.com/store/apps/details?id=com.darshankomu.app_uninstaller";
