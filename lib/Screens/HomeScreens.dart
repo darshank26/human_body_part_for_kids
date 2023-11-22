@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:human_body_part_for_kids/utils/constants.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../AdHelper/adshelper.dart';
@@ -90,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Spleen',
     'Bladder',
     'Intestine',
-    'Blood \nVessels',
+    'Blood Vessels',
   ];
 
   void toggleSwitch(int index) async {
@@ -109,6 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   FlutterTts ftts = FlutterTts();
+   late Timer _timer;
+   var check_volume = true;
 
   @override
   void initState() {
@@ -122,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannerAd = BannerAd(
       adUnitId: AdHelper.bannerAdUnitIdOfHomeScreen,
       request: AdRequest(),
-      size: AdSize.banner,
+      size: AdSize.largeBanner,
       listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
@@ -152,10 +157,57 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
      return Scaffold(
       appBar: AppBar(
+        actions: [
+
+          GestureDetector(
+            onTap: () {
+
+              if (check_volume == true) {
+                setState(() {
+
+                  check_volume = false;
+
+                });
+              } else if (check_volume == false) {
+                setState(() {
+
+                  check_volume = true;
+
+                });
+              }
+
+            },
+            child:
+            check_volume ?
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.volume_up,color: Colors.black45,size: 24,),
+            )
+                :
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.volume_off,color: Colors.black45,size: 24,),
+            )
+
+            ,
+          ),
+
+          GestureDetector(
+              onTap: () {
+                launchPlay();
+              },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(FontAwesomeIcons.solidStar,color: Colors.black45,size: 18,),
+            ),
+          ),
+
+
+        ],
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor: kback,
         title: Text("Human Body Parts",
-          style: GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.w600,letterSpacing: 0.5))
+          style: GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 20,color: kprimarycolor,fontWeight: FontWeight.w600,letterSpacing: 0.5))
           ,),),
       body:  Padding(
         padding: const EdgeInsets.only(top:10.0,bottom: 50.0),
@@ -165,19 +217,18 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ToggleSwitch(
-
                 minWidth: 150.0,
                 cornerRadius: 20.0,
-                activeBgColors: [[Colors.orange], [Colors.orange]],
-                activeFgColor: Colors.white,
-                inactiveBgColor: Colors.grey,
-                inactiveFgColor: Colors.white,
+                activeBgColors: [[kback], [kback]],
+                activeFgColor: kprimarycolor,
+                inactiveBgColor: Colors.grey.shade300,
+                inactiveFgColor: kprimarycolor,
                 initialLabelIndex: _selectedIndexText,
                 totalSwitches: 2,
                 fontSize: 20,
                 customTextStyles : [
-                  GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w600,letterSpacing: 0.5)),
-                  GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.w600,letterSpacing: 0.5))
+                  GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 14,color: kprimarycolor,fontWeight: FontWeight.w600,letterSpacing: 0.5)),
+                  GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 14,color: kprimarycolor,fontWeight: FontWeight.w600,letterSpacing: 0.5))
                 ],
                 icons: [
                   FontAwesomeIcons.eye,
@@ -235,11 +286,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fit: BoxFit.cover,
                               ),
 
-
                                toggle  ?  Text("${_bodyPartName.elementAt(index)}",
 
 
-                                style: GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 40,color: Colors.black87,fontWeight: FontWeight.w600,letterSpacing: 1))
+                                style: GoogleFonts.mochiyPopOne(textStyle: TextStyle(fontSize: 40,color: kprimarycolor,fontWeight: FontWeight.w600,letterSpacing: 1))
                                 ,) : Text(""),
 
                               Padding(
@@ -254,11 +304,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             duration: Duration(milliseconds: 500),
                                             curve: Curves.easeInOut,
                                           );
-                                          ftts.speak(_bodyPartName.elementAt(index-1));
+                                          if(check_volume)
+                                            {
+                                              ftts.speak(_bodyPartName.elementAt(index-1));
+                                            }
                                         }
                                       },
                                       child: Card(
-                                        color: Colors.orange,
+                                        color: kback,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(100),
@@ -269,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Icon(
                                             Icons.arrow_back,
                                             size: 30,
-                                            color: Colors.white,
+                                            color: kprimarycolor,
                                           ),
                                         ),
                                       ),
@@ -277,10 +330,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                     SizedBox(width: 20,),
                                     GestureDetector(
                                       onTap: () {
-                                        ftts.speak(_bodyPartName.elementAt(index));
-                                      },
+
+                                        if (check_volume == true) {
+                                          setState(() {
+
+                                            check_volume = false;
+
+                                          });
+                                        } else if (check_volume == false) {
+                                          setState(() {
+
+                                            check_volume = true;
+
+                                          });
+                                        }
+
+
+                                        if(check_volume)
+                                          {
+                                            ftts.speak(_bodyPartName.elementAt(index));
+                                          }
+
+
+                                        },
                                       child: Card(
-                                        color: Colors.orange,
+                                        color: kback,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(100),
@@ -288,11 +362,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child:  Container(
                                           height: 80,
                                           width: 80,
-                                          child: Icon(
+                                          child:
+
+                                          check_volume ? Icon(
                                             Icons.volume_up,
-                                            color: Colors.white,
+                                            color: kprimarycolor,
+                                            size: 44,
+                                          ) : Icon(
+                                            Icons.volume_off,
+                                            color: kprimarycolor,
                                             size: 44,
                                           ),
+
+
                                         ),
                                       ),
                                     ) ,
@@ -304,11 +386,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             duration: Duration(milliseconds: 500),
                                             curve: Curves.easeInOut,
                                           );
-                                          ftts.speak(_bodyPartName.elementAt(index+1));
+                                          if(check_volume)
+                                            {
+                                              ftts.speak(_bodyPartName.elementAt(index+1));
+                                            }
                                         }
                                       },
                                       child: Card(
-                                        color: Colors.orange,
+                                        color: kback,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(100),
@@ -317,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           height: 50,
                                           width: 60,
                                           child: Icon(
-                                            color: Colors.white,
+                                            color: kprimarycolor,
                                             Icons.arrow_forward,
                                             size: 30,
                                           ),
@@ -343,7 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
        // bottomNavigationBar: BottomNavigationBar(
-       //   selectedItemColor: Colors.orange,
+       //   selectedItemColor: kback,
        //   currentIndex: _selectedIndex, //New
        //   onTap: _onItemTapped,
        //   items: const <BottomNavigationBarItem>[
@@ -383,7 +468,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+  void _modalBottomSheetMenu(){
+    showModalBottomSheet(
+        context: context,
+        builder: (builder){
+          return new Container(
+            height: 350.0,
+            color: Colors.transparent, //could change this to Color(0xFF737373),
+            //so you don't have to change MaterialApp canvasColor
+            child: new Container(
+                decoration: new BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(10.0),
+                        topRight: const Radius.circular(10.0))),
+                child: new Center(
+                  child: new Text("This is a modal sheet"),
+                )),
+          );
+        }
+    );
+  }
 
+
+  void launchPlay() async {
+    LaunchReview.launch(
+      androidAppId: androidAppIdValue,
+      iOSAppId: iOSAppIdValue,);
+  }
 
 
 }

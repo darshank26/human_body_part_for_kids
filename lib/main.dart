@@ -8,10 +8,13 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:human_body_part_for_kids/utils/constants.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'AdHelper/adshelper.dart';
+import 'AdHelper/app_lefecycle_reactor.dart';
+import 'AdHelper/app_open_ad_manager.dart';
 import 'Screens/HomeScreens.dart';
 
 
@@ -95,6 +98,8 @@ class _MyAppState extends State<MyApp> {
 
   bool _requireConsent = true;
 
+  late AppLifecycleReactor _appLifecycleReactor;
+
 
   @override
   void initState() {
@@ -103,6 +108,11 @@ class _MyAppState extends State<MyApp> {
     _handleConsent();
     // _handleSendNotification();
     // showAd();
+
+    AppOpenAdManager appOpenAdManager = AppOpenAdManager()..loadAd();
+    _appLifecycleReactor =
+        AppLifecycleReactor(appOpenAdManager: appOpenAdManager);
+    _appLifecycleReactor.listenToAppStateChanges();
   }
 
 
@@ -190,10 +200,10 @@ class IntroSplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<IntroSplashScreen> {
 
 
-
   @override
   void initState() {
     super.initState();
+
     Timer(Duration(seconds:5 ), (){
 
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -210,7 +220,7 @@ class _SplashScreenState extends State<IntroSplashScreen> {
       debugShowCheckedModeBanner: false,
       title: 'Human Body Parts For Kids',
       home: Scaffold(
-        backgroundColor:Colors.orange,
+        backgroundColor: ksplashback,
         body: Container(
           child: Stack(
             children: [
@@ -218,17 +228,14 @@ class _SplashScreenState extends State<IntroSplashScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/images/logo.png',
-                      height: 380,
-                      width: double.infinity,
+                    Image.asset('assets/images/splashback.png',
                       alignment: Alignment.center,),
-                    SizedBox(height: 10,),
-                    Text(
-                        "Human Body Parts For Kids",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 35,color: Colors.white,fontWeight: FontWeight.w600,letterSpacing: 0.5))
-
-                    ),
+                    // Text(
+                    //     "Human Body Parts For Kids",
+                    //     textAlign: TextAlign.center,
+                    //     style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 35,color: Colors.white,fontWeight: FontWeight.w600,letterSpacing: 0.5))
+                    //
+                    // ),
                   ],
                 ),
               ),
@@ -241,7 +248,7 @@ class _SplashScreenState extends State<IntroSplashScreen> {
                     child: Text(
                         "Designed & Developed By - Darshan Komu",
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 12,color: Colors.white,fontWeight: FontWeight.w600,))
+                        style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 16,color: Colors.black87,fontWeight: FontWeight.w600,))
 
                     ),
                   ),
