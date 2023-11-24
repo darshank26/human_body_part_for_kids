@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   FlutterTts ftts = FlutterTts();
    late Timer _timer;
-   var check_volume = true;
+   var check_volume = false;
 
   @override
   void initState() {
@@ -308,6 +308,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             {
                                               ftts.speak(_bodyPartName.elementAt(index-1));
                                             }
+
+/*
+                                          print("####################"+_pageController.page!.round().toString() );
+*/
+
                                         }
                                       },
                                       child: Card(
@@ -390,9 +395,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             {
                                               ftts.speak(_bodyPartName.elementAt(index+1));
                                             }
+                                          print("++++++"+index.toString());
                                         }
                                       },
-                                      child: Card(
+                                      child: index != 55 ? Card(
                                         color: kback,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
@@ -407,7 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             size: 30,
                                           ),
                                         ),
-                                      ),
+                                      ) : Container(),
                                     ) ,
 
                                   ],
